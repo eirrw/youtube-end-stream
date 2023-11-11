@@ -5,6 +5,7 @@
 // @description Automatically dismiss the popup when ending a stream on YouTube
 // @author      eirrw
 // @match       https://studio.youtube.com/*/livestreaming
+// @grant       window.focus
 // @licence     MIT
 // ==/UserScript==
 
@@ -15,18 +16,12 @@
     const DISMISS_LINK_SELECTOR = '#dismiss-link';
     const END_STREAM_SELECTOR = '#end-stream-button';
 
-    document.addEventListener("visibilitychange", (e) => {
-        console.log(document.hidden);
-        if (document.hidden) {
-            console.log('Bocking visibilitychange propogation');
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
-
     // main logic
     function triggerDismissLink() {
+        // get the dismiss button
         let el = document.querySelector(DISMISS_LINK_SELECTOR);
+
+        // debug info, set const to use
         let debugInfo = {};
         if (DEBUG) {
             debugInfo = {
@@ -37,11 +32,14 @@
             }
         }
 
+        // attempt to trigger popup if not active
         if (el === null || el.offsetParent === null) {
             console.log('Dismiss link not available', debugInfo);
+            window.focus();
             return;
         }
 
+        // click the button
         console.log('Found dismiss link, triggering', debugInfo);
         el.click();
     }
