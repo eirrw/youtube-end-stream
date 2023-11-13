@@ -11,12 +11,18 @@
 
 (function () {
     'use strict';
+
+    /** SETTINGS */
     const LOG_STATUS = true;        // output status logs
     const LOG_DEBUG = false;        // log debug info
     const POLL_TIME_SECONDS = 30;   // time between checks in seconds
+    const PULL_FOCUS = true;        // use window.focus to try and trigger the dismiss popup
+    /** END SETTINGS */
 
+    /** SELECTORS */
     const DISMISS_LINK_SELECTOR = '#dismiss-link';
     const END_STREAM_SELECTOR = '#end-stream-button';
+    /** END SELECTORS */
 
     // main logic
     function triggerDismissLink() {
@@ -37,7 +43,7 @@
         // attempt to trigger popup if not active
         if (el === null || el.offsetParent === null) {
             (LOG_DEBUG || LOG_STATUS) && console.log('Dismiss link not available', debugInfo);
-            window.focus();
+            PULL_FOCUS && window.focus();
             return;
         }
 
@@ -46,6 +52,7 @@
         el.click();
     }
 
+    // start poll timer
     console.log('Starting dismiss watcher');
-    setInterval(triggerDismissLink, (POLL_TIME_SECONDS * 1000)); // start poll timer
+    setInterval(triggerDismissLink, (POLL_TIME_SECONDS * 1000));
 })();
